@@ -1,0 +1,9 @@
+My Self-evaluation:
+-----------------------
+Time spent:    3 Hours
+-----------------------
+Expected Grade: 80/100%
+-----------------------
+Justification:
+I did my best to figure out how to get all the tests to work, but could not. The code works to where like all but 3 or 4 tests 
+don't work, so I plan on making sure when I go back to continue to work on those tests to ensure everything is working.

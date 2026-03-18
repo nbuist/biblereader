@@ -1,0 +1,12 @@
+My Self-evaluation:
+-----------------------
+Time spent:    __ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    __/10
+GUI             __/4
+Implementation  __/5
+Documentation   __/1
+Expected Grade: __/20
+-----------------------
+Justification:

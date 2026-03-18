@@ -1,0 +1,21 @@
+My Self-evaluation:
+-----------------------
+Time spent:    _4_ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    _9_/10
+GUI             _3_/4
+Implementation  _4_/5
+Documentation   _1_/1
+Expected Grade: __/20
+-----------------------
+Justification: 
+It took me far longer than I would have imagined to pass a single test (testEmptyXMV only for me to realize i was
+initializing a VerseList as null rather than the default "unknown")
+
+GUI is pretty basic, I am happy with what it looks like and it still works with the new code added, I am excited to work on
+adding the different bible versions into the entire program
+
+Overall took me a good bit, the hardest part was definetly figuring out how to parse the .xmv files, but I shot for startsWith instead
+of doing the regular expressions because I could wrap my head around it a lot better than figuring out the best way to get a 
+regular expression to work.
