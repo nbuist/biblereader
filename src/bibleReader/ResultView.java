@@ -19,6 +19,7 @@ import bibleReader.model.VerseList;
  * 
  * @author cusack
  * @author Aleks Rutins
+ * @author noahbuist
  */
 public class ResultView extends JPanel {
 
@@ -33,6 +34,7 @@ public class ResultView extends JPanel {
 	 * @param myModel The model this view will access to get information.
 	 */
 	public ResultView(BibleReaderModel myModel) {
+
 		model = myModel;
 
 		output.setContentType("text/html");
@@ -56,21 +58,22 @@ public class ResultView extends JPanel {
 	 * 
 	 * @param verses The verses to display.
 	 */
-	public void loadVerses(VerseList verses) {
-		StringBuilder html = new StringBuilder("<table><tr><th>Content</th><th>Location</th></tr>");
-		for (Verse v : verses) {
-			html.append("<tr><td>");
-			html.append(v.getText());
-			html.append("</td><td>");
-			html.append(v.getReference().toString());
-			html.append("</td></tr>");
-		}
-		html.append("</table>");
-
-		output.setText(html.toString());
-
-		output.setCaretPosition(0); // scroll to top
-	}
+	// public void loadVerses(VerseList verses) {
+	// StringBuilder html = new
+	// StringBuilder("<table><tr><th>Content</th><th>Location</th></tr>");
+	// for (Verse v : verses) {
+	// html.append("<tr><td>");
+	// html.append(v.getText());
+	// html.append("</td><td>");
+	// html.append(v.getReference().toString());
+	// html.append("</td></tr>");
+	// }
+	// html.append("</table>");
+//
+//		output.setText(html.toString());
+//
+//		output.setCaretPosition(0); // scroll to top
+//	}
 
 	/**
 	 * Load and display a list of references.
@@ -79,6 +82,44 @@ public class ResultView extends JPanel {
 	 * @param refs    The references to display.
 	 */
 	public void loadReferences(String version, ArrayList<Reference> refs) {
-		loadVerses(model.getVerses(version, refs));
+		loadReferencesMultiView(refs);
+	}
+
+	public void loadReferencesMultiView(ArrayList<Reference> refs) {
+		VerseList asv = model.getVerses("ASV", refs);
+		VerseList esv = model.getVerses("ESV", refs);
+		VerseList kjv = model.getVerses("KJV", refs);
+
+		StringBuilder html = new StringBuilder("<table><tr><th>Verse</th><th>ASV</th><th>ESV</th><th>KJV</th></tr>");
+		for (Reference r : refs) {
+			/**
+			 * refs asv esv kjv
+			 * 
+			 */
+			html.append("<tr>");
+
+			html.append("<td>");
+			html.append(r.toString());
+			html.append("</td>");
+
+			html.append("<td>");
+			html.append(model.getText("ASV", r));
+			html.append("</td>");
+
+			html.append("<td>");
+			html.append(model.getText("ESV", r));
+			html.append("</td>");
+
+			html.append("<td>");
+			html.append(model.getText("KJV", r));
+			html.append("</td>");
+
+			html.append("</tr");
+		}
+		
+		html.append("</table>");
+		output.setText(html.toString());
+	    output.setCaretPosition(0);
+
 	}
 }

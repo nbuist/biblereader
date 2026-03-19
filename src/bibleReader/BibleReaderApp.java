@@ -60,6 +60,7 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		File asvFile = new File("files/asv.xmv");
 		File esvFile = new File("files/esv.atv");
 		
+		
 		VerseList verses = null;
 		try {
 			verses = BibleIO.readBible(kjvFile);
@@ -86,7 +87,9 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		model.addBible(kjv);
 		model.addBible(asv);
 		model.addBible(esv);
-
+		for (String v : model.getVersions()) {
+		    System.out.println("Loaded version: [" + v + "]");
+		}
 		resultView = new ResultView(model);
 
 		setupGUI();
@@ -173,11 +176,11 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		if (e.getActionCommand().equals("Search")) {
 			ArrayList<Reference> results = model.getReferencesContaining(searchField.getText());
 			resultView.updateSearchStats(searchField.getText(), results.size());
-			resultView.loadReferences((String) bibleSelect.getSelectedItem(), results);
+			resultView.loadReferencesMultiView(results);
 		} else if (e.getActionCommand().equals("Passage")) {
 			ArrayList<Reference> results = model.getReferencesForPassage(searchField.getText());
 			resultView.updateSearchStats(searchField.getText(), results.size());
-			resultView.loadReferences((String) bibleSelect.getSelectedItem(), results);
+			resultView.loadReferencesMultiView(results);
 		}
 	}
 

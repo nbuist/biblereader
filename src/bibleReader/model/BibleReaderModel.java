@@ -41,16 +41,27 @@ public class BibleReaderModel implements MultiBibleModel {
 
 	@Override
 	public void addBible(Bible bible) {
-		if (bible != null) {
-			bibles.put(bible.getVersion(), bible);
+		if(bible == null) {
+			return;
+		}
+		String version = bible.getVersion();
+		if (!bibles.containsKey(version)) {
+			bibles.put(version, bible);
 		}
 	}
-
+	
 	@Override
 	public Bible getBible(String version) {
 		return bibles.get(version);
 	}
 
+	/**
+	 * Helper method
+	 */
+	public String[] getAllVersions() {
+	    return bibles.keySet().toArray(new String[0]);
+	}
+	
 	@Override
 	public ArrayList<Reference> getReferencesContaining(String words) {
 		if (bibles.isEmpty()) {
@@ -66,11 +77,12 @@ public class BibleReaderModel implements MultiBibleModel {
 				result.retainAll(refs);
 			}
 		}
-		if (result != null) {
-			return result;
-		} else {
+		if(result == null) {
 			return new ArrayList<>();
+		}else {
+			return result;
 		}
+		
 	}
 
 	@Override

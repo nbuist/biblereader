@@ -47,11 +47,10 @@ public class BibleIO {
 		} else if ("xmv".equals(extension.toLowerCase())) {
 			try {
 				return readXMV(bibleFile);
-			}catch(FileNotFoundException e) {
-				System.out.println("FileNotFound exception at: "  + e.getLocalizedMessage());
+			} catch (FileNotFoundException e) {
+				System.out.println("FileNotFound exception at: " + e.getLocalizedMessage());
 				return null;
-			} 
-			catch (IOException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("IOException exception at: " + e.getLocalizedMessage());
 				System.out.println("Absolute path tried: " + bibleFile.getAbsolutePath());
@@ -161,50 +160,56 @@ public class BibleIO {
 		// the format of the file.)
 		String version = "unknown";
 		String description = "";
-		
 
 		BufferedReader reader = new BufferedReader(new FileReader(bibleFile));
 		VerseList verses = new VerseList(version, description);
 		String currentBook = "";
 		int currentChapter = 0;
 		String line;
-		
-		while ((line = reader.readLine()) != null){
+
+		while ((line = reader.readLine()) != null) {
 			line = line.trim();
 			if (line.startsWith("<Version")) {
-				String content = line.substring("<Version ".length(), line.length() - 1);
+				int start = line.indexOf("<Version") + 8;
+				int end = line.indexOf(">");
+
+				String content = line.substring(start, end).trim();
+
 				int colonIndex = content.indexOf(":");
+
 				if (colonIndex != -1) {
 					version = content.substring(0, colonIndex).trim();
 					description = content.substring(colonIndex + 1).trim();
 				} else {
-					version = content.trim();
+					version = content;
 					description = "";
 				}
+
 				verses = new VerseList(version, description);
 
 			} else if (line.startsWith("<Book ")) {
-				String content = line.substring("<Book ".length(), line.length() - 1);
-				int commaIndex = content.indexOf(",");
-				if (commaIndex != -1) {
-					currentBook = content.substring(0, commaIndex).trim();
-				} else {
-					currentBook = content.trim();
-				}
+				int start = line.indexOf(" ") + 1;
+				int end = line.indexOf(",");
+
+				currentBook = line.substring(start, end).trim();
 
 			} else if (line.startsWith("<Chapter ")) {
-				String content = line.substring("<Chapter ".length(), line.length() - 1);
-				currentChapter = Integer.parseInt(content.trim());
+				int start = line.indexOf(" ") + 1;
+				int end = line.indexOf(">");
+
+				currentChapter = Integer.parseInt(line.substring(start, end).trim());
 			} else if (line.startsWith("<Verse ")) {
-				String content = line.substring("<Verse ".length());
-				int closeIndex = content.indexOf(">");
-				if (closeIndex != -1) {
-					int verseNum = Integer.parseInt(content.substring(0, closeIndex).trim());
-					String verseText = content.substring(closeIndex + 1).trim();
-					BookOfBible bible = BookOfBible.getBookOfBible(currentBook);
-					Reference ref = new Reference(bible, currentChapter, verseNum);
-					verses.add(new Verse(ref, verseText));
-				}
+				int start = line.indexOf(" ") + 1;
+				int end = line.indexOf(">");
+
+				int verseNum = Integer.parseInt(line.substring(start, end).trim());
+
+				String verseText = line.substring(end + 1).trim();
+
+				BookOfBible book = BookOfBible.getBookOfBible(currentBook);
+				Reference ref = new Reference(book, currentChapter, verseNum);
+
+				verses.add(new Verse(ref, verseText));
 			}
 		}
 		reader.close();
