@@ -24,9 +24,14 @@ public record ReferencePassage(Reference start, Reference end) {
 
 	}
 
-	/** Get all of the references contained between {@link start} and {@link end} */
+	/**
+	 * Get all of the references contained between {@link start} and {@link end},
+	 * inclusive
+	 */
 	public ArrayList<Reference> getReferences(Bible bible) {
 		ArrayList<Reference> res = new ArrayList<>();
+		if (!isValid(bible))
+			return res;
 
 		for (Reference r = new Reference(start.getBookOfBible(), start.getChapter(), start.getVerse()); r
 				.compareTo(end) <= 0; r = incrementReference(bible, r)) {
@@ -34,5 +39,34 @@ public record ReferencePassage(Reference start, Reference end) {
 		}
 
 		return res;
+	}
+
+	/**
+	 * Get all of the references contained between {@link start} and {@link end},
+	 * exclusive
+	 */
+	public ArrayList<Reference> getReferencesExclusive(Bible bible) {
+		ArrayList<Reference> res = new ArrayList<>();
+		if (!isValidExclusive(bible))
+			return res;
+
+		for (Reference r = new Reference(start.getBookOfBible(), start.getChapter(), start.getVerse()); r
+				.compareTo(end) < 0 && bible.isValid(r); r = incrementReference(bible, r)) {
+			res.add(r);
+		}
+
+		return res;
+	}
+
+	/** Returns if the passage is valid in the given Bible. */
+	public boolean isValid(Bible bible) {
+		return bible.isValid(start) && bible.isValid(end) && end.compareTo(start) >= 0;
+	}
+
+	/**
+	 * Returns if the passage is valid, not excluding the end, in the given Bible.
+	 */
+	public boolean isValidExclusive(Bible bible) {
+		return bible.isValid(start) && end.compareTo(start) >= 0;
 	}
 }

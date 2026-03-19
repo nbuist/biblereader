@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ArrayListBible implements Bible {
 
 	// The Fields
-	// Add necessary field(s) here.\
+	// Add necessary field(s) here.
 	private ArrayList<Verse> verses;
 	private String version;
 	private String title;
@@ -126,7 +126,7 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public VerseList getVerses(ArrayList<Reference> references) {
-		VerseList result = new VerseList(version, title);
+		VerseList result = new VerseList(version, "Arbitrary list of Verses");
 		for (Reference r : references) {
 			Verse v = getVerse(r);
 			result.add(v);
@@ -146,7 +146,7 @@ public class ArrayListBible implements Bible {
 		int last = -1;
 		for (Verse v : verses) {
 			Reference r = v.getReference();
-			if (r.getBook().equals(book) && r.getChapter() == chapter) {
+			if (r.getBookOfBible().equals(book) && r.getChapter() == chapter) {
 				if (r.getVerse() > last) {
 					last = r.getVerse();
 				}
@@ -160,7 +160,7 @@ public class ArrayListBible implements Bible {
 		int last = -1;
 		for (Verse v : verses) {
 			Reference r = v.getReference();
-			if (r.getBook().equals(book)) {
+			if (r.getBookOfBible().equals(book)) {
 				if (r.getChapter() > last) {
 					last = r.getChapter();
 				}
@@ -171,95 +171,37 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public ArrayList<Reference> getReferencesInclusive(Reference firstVerse, Reference lastVerse) {
-		ArrayList<Reference> result = new ArrayList<>();
-		boolean inRange = false;
-		for (Verse v : verses) {
-			Reference r = v.getReference();
-			if (r.equals(firstVerse)) {
-				inRange = true;
-			}
-			if (inRange) {
-				result.add(r);
-			}
-			if (r.equals(lastVerse)) {
-				break;
-			}
-		}
-		return result;
+		return new ReferencePassage(firstVerse, lastVerse).getReferences(this);
 	}
 
 	@Override
 	public ArrayList<Reference> getReferencesExclusive(Reference firstVerse, Reference lastVerse) {
-		ArrayList<Reference> result = new ArrayList<>();
-		boolean inRange = false;
-		for (Verse v : verses) {
-			Reference r = v.getReference();
-			if (r.equals(lastVerse)) {
-				break;
-			}
-			if (inRange) {
-				result.add(r);
-			}
-			if (r.equals(firstVerse)) {
-				inRange = true;
-			}
-		}
-		return result;
+		return new ReferencePassage(firstVerse, lastVerse).getReferencesExclusive(this);
 	}
 
 	@Override
 	public ArrayList<Reference> getReferencesForBook(BookOfBible book) {
-		Reference first = null;
-		Reference last = null;
-		for (Verse v : verses) {
-			Reference r = v.getReference();
-			if (r.getBook().equals(book)) {
-				if (first == null) {
-					first = r;
-				}
-				last = r;
-			}
-		}
-		if (first == null) {
-			return new ArrayList<>();
-		}
-		return getReferencesInclusive(first, last);
+		int lastChapter = getLastChapterNumber(book);
+		int lastVerse = getLastVerseNumber(book, lastChapter);
+		return getReferencesInclusive(new Reference(book, 1, 1), new Reference(book, lastChapter, lastVerse));
 	}
 
 	@Override
 	public ArrayList<Reference> getReferencesForChapter(BookOfBible book, int chapter) {
-		ArrayList<Reference> result = new ArrayList<>();
-		for(Verse v : verses) {
-			Reference r = v.getReference();
-			if(r.getBook().equals(book) && r.getChapter() == chapter) {
-				result.add(r);
-			}
-		}
-		return result;
+		return getReferencesInclusive(new Reference(book, chapter, 1),
+				new Reference(book, chapter, getLastVerseNumber(book, chapter)));
 	}
 
 	@Override
 	public ArrayList<Reference> getReferencesForChapters(BookOfBible book, int chapter1, int chapter2) {
-		ArrayList<Reference> result = new ArrayList<>();
-		for(Verse v : verses) {
-			Reference r = v.getReference();
-			if(r.getBook().equals(book) && r.getChapter() >= chapter1 && r.getChapter() <= chapter2) {
-				result.add(r);
-			}
-		}
-		return result;
+		return getReferencesInclusive(new Reference(book, chapter1, 1),
+				new Reference(book, chapter2, getLastVerseNumber(book, chapter2)));
 	}
 
 	@Override
 	public ArrayList<Reference> getReferencesForPassage(BookOfBible book, int chapter, int verse1, int verse2) {
-		ArrayList<Reference> result = new ArrayList<>();
-		for(Verse v : verses) {
-			Reference r = v.getReference();
-			if(r.getBook().equals(book) && r.getChapter() == chapter && r.getVerse() >= verse1 && r.getVerse() <= verse2) {
-				result.add(r);
-			}
-		}
-		return result;
+		return getReferencesInclusive(new Reference(book, chapter, verse1), new Reference(book, chapter, verse2));
+
 	}
 
 	@Override
@@ -297,7 +239,7 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public VerseList getPassage(BookOfBible book, int chapter, int verse1, int verse2) {
-		return getVerses(getReferencesForPassage(book, chapter,  verse1, verse2));
+		return getVerses(getReferencesForPassage(book, chapter, verse1, verse2));
 	}
 
 	@Override

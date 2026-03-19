@@ -57,7 +57,8 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		// you need to modify or add to it.
 		model = new BibleReaderModel(); // For now call the default constructor. This might change.
 		File kjvFile = new File("files/kjv.atv");
-		//File asvFile = new File("files/asv.xmv"); -- Implement in later stage
+		File asvFile = new File("files/asv.xmv");
+		File esvFile = new File("files/esv.atv");
 		
 		VerseList verses = null;
 		try {
@@ -66,10 +67,25 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		Bible kjv = new ArrayListBible(verses);
+		try {
+			verses = BibleIO.readBible(asvFile);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		Bible asv = new ArrayListBible(verses);
+		try {
+			verses = BibleIO.readBible(esvFile);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		Bible esv = new ArrayListBible(verses);
+
+		
 		
 		model.addBible(kjv);
+		model.addBible(asv);
+		model.addBible(esv);
 
 		resultView = new ResultView(model);
 
@@ -140,12 +156,8 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		content.add(controls, BorderLayout.NORTH);
 		content.add(resultView);
 
-		// TODO textfield and button that allow a word search to be performed: Stage 5
-		// TODO Display search results (in the ResulteView): Stage 5
-
 		// The stage numbers below may change, so make sure to pay attention to
 		// what the assignment says.
-		// TODO Add passage lookup: Stage ?
 		// TODO Add 2nd version on display: Stage ?
 		// TODO Limit the displayed search results to 20 at a time: Stage ?
 		// TODO Add 3rd versions on display: Stage ?

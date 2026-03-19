@@ -42,8 +42,8 @@ public class ReferenceMatcher {
 	}
 
 	/**
-	 * Attempt to parse a reference from a user-inputted string. Return null if the
-	 * input is invalid.
+	 * Attempt to parse a reference passage from a user-inputted string. Return null
+	 * if the input is invalid.
 	 */
 	public static ReferencePassage parse(Bible bible, CharSequence sRef) {
 		Matcher m = referencePat.matcher(sRef);
@@ -77,8 +77,15 @@ public class ReferenceMatcher {
 					}
 					// else
 					else {
-						// return (chapter start, chapter end)
 						int chs = Integer.parseInt(chapterStart), che = Integer.parseInt(chapterEnd.text());
+						// if verse end
+						if (verseEnd != null) {
+							int ve = Integer.parseInt(verseEnd.text());
+							return new ReferencePassage(new Reference(bookOfBible, chs, 1),
+									new Reference(bookOfBible, che, ve));
+						}
+						// return (chapter start, chapter end)
+
 						return new ReferencePassage(new Reference(bookOfBible, chs, 1),
 								new Reference(bookOfBible, che, bible.getLastVerseNumber(bookOfBible, che)));
 					}
@@ -94,7 +101,7 @@ public class ReferenceMatcher {
 								vs = Integer.parseInt(verseStart.text()), ve = Integer.parseInt(verseEnd.text());
 
 						return new ReferencePassage(new Reference(bookOfBible, chs, vs),
-								new Reference(bookOfBible, che, bible.getLastVerseNumber(bookOfBible, ve)));
+								new Reference(bookOfBible, che, ve));
 					}
 					// else
 					else {
