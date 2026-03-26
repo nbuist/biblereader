@@ -30,15 +30,10 @@ public record ReferencePassage(Reference start, Reference end) {
 	 */
 	public ArrayList<Reference> getReferences(Bible bible) {
 		ArrayList<Reference> res = new ArrayList<>();
-		if (!isValid(bible))
+		if (!isValidExclusive(bible))
 			return res;
 
-		for (Reference r = new Reference(start.getBookOfBible(), start.getChapter(), start.getVerse()); r
-				.compareTo(end) <= 0; r = incrementReference(bible, r)) {
-			res.add(r);
-		}
-
-		return res;
+		return bible.getReferencesInclusive(start, end);
 	}
 
 	/**
@@ -50,12 +45,7 @@ public record ReferencePassage(Reference start, Reference end) {
 		if (!isValidExclusive(bible))
 			return res;
 
-		for (Reference r = new Reference(start.getBookOfBible(), start.getChapter(), start.getVerse()); r
-				.compareTo(end) < 0 && bible.isValid(r); r = incrementReference(bible, r)) {
-			res.add(r);
-		}
-
-		return res;
+		return bible.getReferencesExclusive(start, end);
 	}
 
 	/** Returns if the passage is valid in the given Bible. */

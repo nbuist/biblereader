@@ -56,7 +56,8 @@ public class Reference implements Comparable<Reference> {
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		int bookHash = (book != null) ? book.hashCode() : 0;
+	    return 31 * bookHash + 31 * chapter + verse;
 	}
 	
 	@Override

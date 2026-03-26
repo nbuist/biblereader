@@ -81,15 +81,11 @@ public class ResultView extends JPanel {
 	 * @param version The version of the Bible to load from.
 	 * @param refs    The references to display.
 	 */
-	public void loadReferences(String version, ArrayList<Reference> refs) {
-		loadReferencesMultiView(refs);
-	}
+	//public void loadReferences(String version, ArrayList<Reference> refs) {
+	//	loadReferencesMultiView(refs);
+	//}
 
 	public void loadReferencesMultiView(ArrayList<Reference> refs) {
-		VerseList asv = model.getVerses("ASV", refs);
-		VerseList esv = model.getVerses("ESV", refs);
-		VerseList kjv = model.getVerses("KJV", refs);
-
 		StringBuilder html = new StringBuilder("<table><tr><th>Verse</th><th>ASV</th><th>ESV</th><th>KJV</th></tr>");
 		for (Reference r : refs) {
 			/**
@@ -114,7 +110,7 @@ public class ResultView extends JPanel {
 			html.append(model.getText("KJV", r));
 			html.append("</td>");
 
-			html.append("</tr");
+			html.append("</tr>");
 		}
 		
 		html.append("</table>");

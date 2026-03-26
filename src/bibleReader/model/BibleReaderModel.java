@@ -1,9 +1,10 @@
 package bibleReader.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 /**
  * The model of the Bible Reader. It stores the Bibles and has methods for
@@ -30,7 +31,9 @@ public class BibleReaderModel implements MultiBibleModel {
 
 	@Override
 	public String[] getVersions() {
-		return bibles.keySet().toArray(new String[0]);
+		String[] version = bibles.keySet().toArray(new String[0]);
+		Arrays.sort(version);
+		return version;
 	}
 
 	@Override
@@ -41,15 +44,12 @@ public class BibleReaderModel implements MultiBibleModel {
 
 	@Override
 	public void addBible(Bible bible) {
-		if(bible == null) {
+		if (bible == null) {
 			return;
 		}
-		String version = bible.getVersion();
-		if (!bibles.containsKey(version)) {
-			bibles.put(version, bible);
-		}
+		bibles.put(bible.getVersion(), bible);
 	}
-	
+
 	@Override
 	public Bible getBible(String version) {
 		return bibles.get(version);
@@ -59,30 +59,22 @@ public class BibleReaderModel implements MultiBibleModel {
 	 * Helper method
 	 */
 	public String[] getAllVersions() {
-	    return bibles.keySet().toArray(new String[0]);
+		return bibles.keySet().toArray(new String[0]);
 	}
-	
+
 	@Override
 	public ArrayList<Reference> getReferencesContaining(String words) {
 		if (bibles.isEmpty()) {
 			return new ArrayList<>();
 		}
 
-		ArrayList<Reference> result = null;
+		Set<Reference> result = new LinkedHashSet<>(); // no duplicates
 		for (Bible bible : bibles.values()) {
 			ArrayList<Reference> refs = bible.getReferencesContaining(words);
-			if (result == null) {
-				result = new ArrayList<>(refs);
-			} else {
-				result.retainAll(refs);
-			}
+			result.addAll(refs);
 		}
-		if(result == null) {
-			return new ArrayList<>();
-		}else {
-			return result;
-		}
-		
+		return new ArrayList<>(result);
+
 	}
 
 	@Override
@@ -98,10 +90,18 @@ public class BibleReaderModel implements MultiBibleModel {
 	@Override
 	public String getText(String version, Reference reference) {
 		Bible bible = bibles.get(version);
-		if (bible == null) {
-			return null;
+		if (version == null || reference == null) {
+			return "";
 		}
-		return bible.getVerseText(reference);
+		if (bible == null) {
+			return "";
+		}
+		String text = bible.getVerseText(reference);
+		if (text == null) {
+			return "";
+		} else {
+			return text;
+		}
 	}
 
 	@Override
@@ -110,23 +110,14 @@ public class BibleReaderModel implements MultiBibleModel {
 			return new ArrayList<>();
 		}
 
-		ArrayList<Reference> result = null;
+		LinkedHashSet<Reference> seen = new LinkedHashSet<>();
 		for (Bible bible : bibles.values()) {
 			ReferencePassage pass = ReferenceMatcher.parse(bible, reference);
-			if (pass == null || !pass.isValid(bible))
+			if (pass == null || !pass.isValidExclusive(bible))
 				continue;
-			ArrayList<Reference> refs = pass.getReferences(bible);
-			if (result == null) {
-				result = new ArrayList<>(refs);
-			} else {
-				result.retainAll(refs);
-			}
+			seen.addAll(pass.getReferences(bible));
 		}
-		if (result != null) {
-			return result;
-		} else {
-			return new ArrayList<>();
-		}
+		return new ArrayList<>(seen);
 	}
 
 	// -----------------------------------------------------------------------------

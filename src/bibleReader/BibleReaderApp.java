@@ -84,9 +84,10 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 
 		
 		
+		
+		model.addBible(esv);
 		model.addBible(kjv);
 		model.addBible(asv);
-		model.addBible(esv);
 		for (String v : model.getVersions()) {
 		    System.out.println("Loaded version: [" + v + "]");
 		}
@@ -105,7 +106,7 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 	 * Set up the main GUI. Make sure you don't forget to put resultView somewhere!
 	 */
 	private void setupGUI() {
-		setTitle("Bible Reader Stage 5");
+		setTitle("Bible Reader Stage 9");
 		setLayout(new BorderLayout(5, 5));
 
 		JMenuBar menuBar = new JMenuBar();
@@ -124,7 +125,7 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null,
-						"Bible Reader - Stage 5\n" + "Version 1.0" + "\nAuthor: Noah Buist + Aleks Rutins\n\n"
+						"Bible Reader - Stage 5\n" + "Version 1.1" + "\nAuthor: Noah Buist + Aleks Rutins\n\n"
 								+ "A simple Bible reading and search application.",
 						"About Bible Reader", JOptionPane.INFORMATION_MESSAGE);
 			}
