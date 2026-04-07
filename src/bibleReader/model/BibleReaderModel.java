@@ -2,9 +2,9 @@ package bibleReader.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * The model of the Bible Reader. It stores the Bibles and has methods for
@@ -19,20 +19,19 @@ public class BibleReaderModel implements MultiBibleModel {
 	// TODO Add more fields here: Stage 5
 	// You need to store several Bible objects.
 	// You may need to store other data as well.
-	private LinkedHashMap<String, Bible> bibles;
+	private TreeMap<String, Bible> bibles;
 
 	/**
 	 * Default constructor. You probably need to instantiate objects and do other
 	 * assorted things to set up the model.
 	 */
 	public BibleReaderModel() {
-		bibles = new LinkedHashMap<>();
+		bibles = new TreeMap<>();
 	}
 
 	@Override
 	public String[] getVersions() {
 		String[] version = bibles.keySet().toArray(new String[0]);
-		Arrays.sort(version);
 		return version;
 	}
 
@@ -89,10 +88,10 @@ public class BibleReaderModel implements MultiBibleModel {
 
 	@Override
 	public String getText(String version, Reference reference) {
-		Bible bible = bibles.get(version);
 		if (version == null || reference == null) {
 			return "";
 		}
+		Bible bible = bibles.get(version);
 		if (bible == null) {
 			return "";
 		}
