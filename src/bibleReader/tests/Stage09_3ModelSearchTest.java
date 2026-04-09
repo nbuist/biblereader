@@ -37,7 +37,7 @@ import bibleReader.model.VerseList;
  * 
  * @author Chuck Cusack, March, 2013
  */
-@Timeout(value = 5000, unit = TimeUnit.MILLISECONDS)
+@Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
 public class Stage09_3ModelSearchTest {
 
 	private static VerseList[] verses;

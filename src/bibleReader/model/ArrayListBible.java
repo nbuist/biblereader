@@ -117,15 +117,16 @@ public class ArrayListBible implements Bible {
 	@Override
 	public ArrayList<Reference> getReferencesContaining(String phrase) {
 		ArrayList<Reference> result = new ArrayList<>();
-		if (phrase == null || phrase.isEmpty()) {
-			return result;
-		}
-		for (Verse v : verseMap.values()) {
-			if (v.getText().toLowerCase().contains(phrase.toLowerCase())) {
-				result.add(v.getReference());
-			}
-		}
-		return result;
+	    if (phrase == null || phrase.isEmpty()) {
+	        return result;
+	    }
+	    String lowerPhrase = phrase.toLowerCase(); // compute once
+	    for (Verse v : verseMap.values()) {
+	        if (v.getText().toLowerCase().contains(lowerPhrase)) {
+	            result.add(v.getReference());
+	        }
+	    }
+	    return result;
 	}
 
 	@Override
