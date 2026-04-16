@@ -1,0 +1,14 @@
+My Self-evaluation:
+-----------------------
+Time spent:    _5_ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    _6_/10
+GUI             _3_/4
+Implementation  _4_/5
+Documentation   _0_/1
+Expected Grade: _13_/20
+-----------------------
+
+Wasnt really that good of code, ran out of time I allocated to myself to actually get it in before it would be graded
+Going to still spend time on fixing it up so I dont have to worry about it for future projects

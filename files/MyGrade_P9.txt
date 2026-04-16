@@ -1,0 +1,17 @@
+My Self-evaluation:
+-----------------------
+Time spent:    _5_ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    _8_/10
+GUI             _3_/4
+Implementation  _4_/5
+Documentation   _0_/1
+Expected Grade: _15_/20
+-----------------------
+Justification:
+Started working on this before break, but came back and spent the majority of the time debugging. It was fun to 
+modify the GUI to display multiple versions of the bible. I decided on a TreeMap as the best data structure as
+it alphabetically sorted the bibles and I did not have to waste memory and time during tests on calling a sorting
+algorithm. Currently still working on fixing unoptimized code that is running way too long so all the tests pass.
+Overall only had 3 tests that did not end up working (timeout exception) so I am rolling with that

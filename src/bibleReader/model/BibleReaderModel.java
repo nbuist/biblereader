@@ -1,10 +1,10 @@
 package bibleReader.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * The model of the Bible Reader. It stores the Bibles and has methods for
@@ -67,11 +67,13 @@ public class BibleReaderModel implements MultiBibleModel {
 			return new ArrayList<>();
 		}
 
-		Set<Reference> result = new TreeSet<>();
+		Set<Reference> result = new LinkedHashSet<>();
 		for (Bible bible : bibles.values()) {
 			result.addAll(bible.getReferencesContaining(words));
 		}
-		return new ArrayList<>(result);
+		ArrayList<Reference> sorted = new ArrayList<>(result);
+	    Collections.sort(sorted);
+	    return sorted;
 
 	}
 

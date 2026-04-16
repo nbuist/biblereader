@@ -32,19 +32,19 @@ import bibleReader.model.VerseList;
  */
 public class BibleReaderApp extends JFrame implements ActionListener {
 	// Change these to suit your needs.
-	public static final int width = 600;
-	public static final int height = 600;
+	public static final int width = 1200;
+	public static final int height = 800;
 
 	public static void main(String[] args) {
 		new BibleReaderApp();
 	}
 
 	// Fields
-	private BibleReaderModel model;
-	private ResultView resultView;
+	public BibleReaderModel model;
+	public ResultView resultView;
 
-	private JTextField searchField;
-	private JComboBox<String> bibleSelect;
+	public JTextField searchField;
+	public JComboBox<String> bibleSelect;
 
 	// TODO add more fields as necessary
 
@@ -137,34 +137,33 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 
 		JPanel controls = new JPanel(new BorderLayout(5, 5));
 
-		bibleSelect = new JComboBox<>();
-		for (String v : model.getVersions())
-			bibleSelect.addItem(v);
-		controls.add(bibleSelect, BorderLayout.WEST);
-
 		searchField = new JTextField();
+		searchField.setName("InputTextField");
 		controls.add(searchField);
 
 		JPanel buttonPanel = new JPanel();
 		JButton searchBtn = new JButton("Search");
+		searchBtn.setName("SearchButton");
 		searchBtn.addActionListener(this);
 		buttonPanel.add(searchBtn);
 
 		JButton passageBtn = new JButton("Passage");
+		passageBtn.setName("PassageButton");
 		passageBtn.addActionListener(this);
 		buttonPanel.add(passageBtn);
-
+	
+		
+		
 		controls.add(buttonPanel, BorderLayout.EAST);
-
+		
 		Container content = getContentPane();
 		content.add(controls, BorderLayout.NORTH);
 		content.add(resultView);
+		
 
 		// The stage numbers below may change, so make sure to pay attention to
 		// what the assignment says.
-		// TODO Add 2nd version on display: Stage ?
 		// TODO Limit the displayed search results to 20 at a time: Stage ?
-		// TODO Add 3rd versions on display: Stage ?
 		// TODO Format results better: Stage ?
 		// TODO Display cross references for third version: Stage ?
 		// TODO Save/load search results: Stage ?

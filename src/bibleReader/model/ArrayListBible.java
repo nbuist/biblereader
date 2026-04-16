@@ -2,7 +2,7 @@ package bibleReader.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.TreeSet;
 
 /**
  * A class that stores a version of the Bible.
@@ -14,9 +14,7 @@ public class ArrayListBible implements Bible {
 
 	// The Fields
 	// Add necessary field(s) here.
-	private LinkedHashMap<Reference, Verse> verseMap; // O(1) lookup
-	private HashMap<BookOfBible, Integer> lastChapterCache;
-	private HashMap<String, Integer> lastVerseCache; // key: "BOOK-chapter"
+	private TreeSet<Verse> verseSet; // O(1) lookup
 	private String version;
 	private String title;
 
@@ -28,24 +26,17 @@ public class ArrayListBible implements Bible {
 	public ArrayListBible(VerseList verses) {
 		this.version = verses.getVersion();
         this.title = verses.getDescription();
-        this.verseMap = new LinkedHashMap<>();
-        this.lastChapterCache = new HashMap<>();
-        this.lastVerseCache = new HashMap<>();
+        this.verseSet = new TreeSet<>();
 
         for (Verse v : verses) {
-            Reference r = v.getReference();
-            verseMap.put(r, v);
-
-            BookOfBible book = r.getBookOfBible();
-            lastChapterCache.merge(book, r.getChapter(), Math::max);
-            lastVerseCache.merge(book + "-" + r.getChapter(), r.getVerse(), Math::max);
+            verseSet.add(v);
         }
 	}
 
 	@Override
 	public int getNumberOfVerses() {
 		// TODO Implement me: Stage 2
-		return verseMap.size();
+		return verseSet.size();
 	}
 
 	@Override
@@ -60,27 +51,37 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public boolean isValid(Reference ref) {
-		return verseMap.containsKey(ref);
+		return getVerse(ref) != null;
 	}
 
 	@Override
 	public String getVerseText(Reference r) {
-		Verse v = verseMap.get(r);
+		Verse v = getVerse(r);
 	    if (v != null) {
 	        return v.getText();
-	    } else {
-	        return null;
 	    }
+	    return null;
 	}
 
 	@Override
 	public Verse getVerse(Reference r) {
-		return verseMap.get(r);
+		for (Verse v : verseSet) {
+	        if (v.getReference().equals(r)) {
+	            return v;
+	        }
+	    }
+	    return null;
 	}
 
 	@Override
 	public Verse getVerse(BookOfBible book, int chapter, int verse) {
-		return verseMap.get(new Reference(book, chapter, verse));
+		Reference r = new Reference(book, chapter, verse);
+		for (Verse v : verseSet) {
+			if(v.getReference().equals(r)) {
+				return v;
+			}
+		}
+		return null;
 	}
 
 	// ---------------------------------------------------------------------------------------------
@@ -97,7 +98,7 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public VerseList getAllVerses() {
-		return new VerseList(version, title, new ArrayList<>(verseMap.values()));
+		return new VerseList(version, title, new ArrayList<>(verseSet));
 	}
 
 	@Override
@@ -106,8 +107,9 @@ public class ArrayListBible implements Bible {
 		if (phrase == null || phrase.isEmpty()) {
 			return result;
 		}
-		for (Verse v : verseMap.values()) {
-			if (v.getText().toLowerCase().contains(phrase.toLowerCase())) {
+		String lowerPhrase = phrase.toLowerCase();
+		for (Verse v : verseSet) {
+			if (v.getLowerText().contains(lowerPhrase)) {
 				result.add(v);
 			}
 		}
@@ -121,8 +123,8 @@ public class ArrayListBible implements Bible {
 	        return result;
 	    }
 	    String lowerPhrase = phrase.toLowerCase(); // compute once
-	    for (Verse v : verseMap.values()) {
-	        if (v.getText().toLowerCase().contains(lowerPhrase)) {
+	    for (Verse v : verseSet) {
+	        if (v.getLowerText().contains(lowerPhrase)) {
 	            result.add(v.getReference());
 	        }
 	    }
@@ -132,10 +134,10 @@ public class ArrayListBible implements Bible {
 	@Override
 	public VerseList getVerses(ArrayList<Reference> references) {
 		VerseList result = new VerseList(version, "Arbitrary list of Verses");
-		for (Reference r : references) {
-			result.add(verseMap.get(r));
-		}
-		return result;
+	    for (Reference r : references) {
+	        result.add(getVerse(r));
+	    }
+	    return result;
 	}
 	// ---------------------------------------------------------------------------------------------
 	// The following part of this class should be implemented for Stage 7.
@@ -147,12 +149,26 @@ public class ArrayListBible implements Bible {
 
 	@Override
 	public int getLastVerseNumber(BookOfBible book, int chapter) {
-		return lastVerseCache.getOrDefault(book + "-" + chapter, -1);
+		int max = -1;
+	    for (Verse v : verseSet) {
+	        Reference ref = v.getReference();
+	        if (ref.getBookOfBible().equals(book) && ref.getChapter() == chapter) {
+	            max = Math.max(max, ref.getVerse());
+	        }
+	    }
+	    return max;
 	}
 
 	@Override
 	public int getLastChapterNumber(BookOfBible book) {
-		return lastVerseCache.getOrDefault(book, -1);
+		int max = -1;
+	    for (Verse v : verseSet) {
+	        Reference ref = v.getReference();
+	        if (ref.getBookOfBible().equals(book)) {
+	            max = Math.max(max, ref.getChapter()); 
+	        }
+	    }
+	    return max;
 	}
 
 	@Override
@@ -161,7 +177,8 @@ public class ArrayListBible implements Bible {
 	    if (firstVerse == null || lastVerse == null || firstVerse.compareTo(lastVerse) > 0) {
 	        return result;
 	    }
-	    for (Reference r : verseMap.keySet()) {
+	    for (Verse v : verseSet) {
+	    	Reference r = v.getReference();
 	        if (r.compareTo(firstVerse) >= 0 && r.compareTo(lastVerse) <= 0) {
 	            result.add(r);
 	        }
@@ -175,7 +192,8 @@ public class ArrayListBible implements Bible {
 	    if (firstVerse == null || lastVerse == null || firstVerse.compareTo(lastVerse) > 0) {
 	        return result;
 	    }
-	    for (Reference r : verseMap.keySet()) {
+	    for (Verse v : verseSet) {
+	    	Reference r = v.getReference();
 	        if (r.compareTo(firstVerse) >= 0 && r.compareTo(lastVerse) < 0) {
 	            result.add(r);
 	        }
@@ -187,7 +205,7 @@ public class ArrayListBible implements Bible {
 	public ArrayList<Reference> getReferencesForBook(BookOfBible book) {
 		int lastChapter = getLastChapterNumber(book);
 		int lastVerse = getLastVerseNumber(book, lastChapter);
-		System.out.println("book=" + book + " lastChapter=" + lastChapter + " lastVerse=" + lastVerse);
+		//System.out.println("book=" + book + " lastChapter=" + lastChapter + " lastVerse=" + lastVerse);
 		return getReferencesInclusive(new Reference(book, 1, 1), new Reference(book, lastChapter, lastVerse));
 	}
 

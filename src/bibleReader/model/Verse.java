@@ -8,6 +8,7 @@ package bibleReader.model;
 public class Verse implements Comparable<Verse> {
 	private Reference	reference;
 	private String		text;
+	private String		lowerText;
 
 	/**
 	 * Construct a verse given the reference and the text.
@@ -18,6 +19,11 @@ public class Verse implements Comparable<Verse> {
 	public Verse(Reference r, String t) {
 		reference = r;
 		text = t;
+		if (t != null) {
+	        lowerText = t.toLowerCase();
+	    } else {
+	        lowerText = "";
+	    }
 	}
 
 	/**
@@ -31,6 +37,11 @@ public class Verse implements Comparable<Verse> {
 	public Verse(BookOfBible book, int chapter, int verse, String text) {
 		reference = new Reference(book, chapter, verse);
 		this.text = text;
+		if (text != null) {
+	        lowerText = text.toLowerCase();
+	    } else {
+	        lowerText = "";
+	    }
 	}
 
 	/**
@@ -58,6 +69,10 @@ public class Verse implements Comparable<Verse> {
 	@Override
 	public String toString() {
 		return reference + " " + text;
+	}
+	
+	public String getLowerText() {
+		return lowerText;
 	}
 
 	@Override
