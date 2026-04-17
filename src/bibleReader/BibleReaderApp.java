@@ -179,8 +179,8 @@ public class BibleReaderApp extends JFrame implements ActionListener {
 			resultView.loadReferencesMultiView(results);
 		} else if (e.getActionCommand().equals("Passage")) {
 			ArrayList<Reference> results = model.getReferencesForPassage(searchField.getText());
-			resultView.updateSearchStats(searchField.getText(), results.size());
-			resultView.loadReferencesMultiView(results);
+		    resultView.updateSearchStats(searchField.getText(), results.size());
+		    resultView.loadPassageMultiView(results);
 		}
 	}
 
