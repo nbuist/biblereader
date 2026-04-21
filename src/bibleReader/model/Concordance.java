@@ -1,49 +1,68 @@
 package bibleReader.model;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
- * Concordance is a class which implements a concordance for a Bible. In other words, it allows the easy lookup of all
- * references which contain a given word.
+ * Concordance is a class which implements a concordance for a Bible. In other
+ * words, it allows the easy lookup of all references which contain a given
+ * word.
  * 
  * @author Chuck Cusack, March 2013 (Provided the interface)
- * @author ?, March 2013 (Provided the implementation details)
+ * @author noahbuist, April 2026 (Provided the implementation details)
  */
 public class Concordance {
-	// Add fields here.  (I actually only needed one field.)
+	// Add fields here. (I actually only needed one field.)
+	private TreeMap<String, ArrayList<Reference>> index;
 
 	/**
 	 * Construct a concordance for the given Bible.
 	 */
 	public Concordance(Bible bible) {
 		// TODO: Implement me.
+		index = new TreeMap<>();
+		for(Verse v : bible.getAllVerses()) {
+			String text = v.getText();
+			String[] words = text.split("[^a-zA-Z]+");
+			
+			for(String word : words) {
+				if(word.isEmpty())continue;
+				
+			}
+		}
+
 	}
 
 	/**
-	 * Return the list of references to verses that contain the word 'word' (ignoring case) in the version of the Bible
-	 * that this concordance was created with.
+	 * Return the list of references to verses that contain the word 'word'
+	 * (ignoring case) in the version of the Bible that this concordance was created
+	 * with.
 	 * 
 	 * @param word a single word (no spaces, etc.)
-	 * @return the list of References of verses from this version that contain the word, or an empty list if no verses
-	 *         contain the word.
+	 * @return the list of References of verses from this version that contain the
+	 *         word, or an empty list if no verses contain the word.
 	 */
 	public ArrayList<Reference> getReferencesContaining(String word) {
-		// TODO: Implement me.
-		// This one should only be a few lines if you implement this class correctly.
+		if(word.equals(null)) {
+			return null
+		}
 		return null;
 	}
 
 	/**
-	 * Given an array of Strings, where each element of the array is expected to be a single word (with no spaces, etc.,
-	 * but ignoring case), return a ArrayList<Reference> containing all of the verses that contain <i>all of the words</i>.
+	 * Given an array of Strings, where each element of the array is expected to be
+	 * a single word (with no spaces, etc., but ignoring case), return a
+	 * ArrayList<Reference> containing all of the verses that contain <i>all of the
+	 * words</i>.
 	 * 
 	 * @param words A list of words.
-	 * @return An ArrayList<Reference> containing references to all of the verses that contain all of the given words, or an
-	 *         empty list if
+	 * @return An ArrayList<Reference> containing references to all of the verses
+	 *         that contain all of the given words, or an empty list if
 	 */
 	public ArrayList<Reference> getReferencesContainingAll(ArrayList<String> words) {
 		// TODO: Implement me.
-		// This one is a little more complicated, but is similar in many ways to methods you have already implemented.
+		// This one is a little more complicated, but is similar in many ways to methods
+		// you have already implemented.
 		return null;
 	}
 }

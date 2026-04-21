@@ -1,0 +1,16 @@
+My Self-evaluation:
+-----------------------
+Time spent:    _3_ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    _8_/10
+GUI             _4_/4
+Implementation  _4_/5
+Documentation   _0_/1
+Expected Grade: _16_/20
+-----------------------
+
+I don't know why I am getting timeout exception, got it even when I changed the timeout period to 5000 ms. It seems
+to be timing out immediately. Probably something with some loop somewhere. Other than that wasnt that difficult using
+the tips in the docs, had some discussion with Aleks about optimization but we ended up implementing different methods
+different ways but most the test still work.
