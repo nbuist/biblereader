@@ -26,7 +26,7 @@ import bibleReader.model.Reference;
 public class ResultView extends JPanel {
 
 	public static final int PAGE_SIZE = 20;
-	private static final String[] VERSIONS = { "ASV", "ESV", "KJV" };
+	private String[] VERSIONS = { "ASV", "ESV", "KJV" };
 
 	private BibleReaderModel model;
 	public JEditorPane output = new JEditorPane();
