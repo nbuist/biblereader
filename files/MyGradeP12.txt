@@ -1,0 +1,18 @@
+My Self-evaluation:
+-----------------------
+Time spent:    _4_ Hours
+-----------------------
+Criteria     score/pts
+Tests Passed    _9_/10
+GUI             _3_/4 
+Implementation  _4_/5
+Documentation   _1_/1
+Expected Grade: _17_/20
+-----------------------
+
+I am passing every test except for one which I am getting a timeout exception on, but I am going to take
+every test except one so! Overall took me a bit of thinking to try and improve time complexity by not using an
+arraylist since in class we saw how slow it can be, so I ended up using a treemap with a dummy value so I can just return
+a new arraylist using the keySet of references from a treemap
+
+

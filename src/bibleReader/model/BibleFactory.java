@@ -9,11 +9,9 @@ package bibleReader.model;
 public class BibleFactory {
 
 	public static Bible createBible(VerseList verses) {
-		return new ArrayListBible(verses);
-		//return new TreeMapBible(verses);
+		return new TreeMapBible(verses);
 	}
 	public static Concordance createConcordance(Bible bible) {
-		// return new Concordance(bible); // eventually you'll need this instead.
-		throw new UnsupportedOperationException("Method not implemented");
+		return new Concordance(bible);
 	}
 }
