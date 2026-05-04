@@ -20,6 +20,7 @@ public class BibleReaderModel implements MultiBibleModel {
 	// You need to store several Bible objects.
 	// You may need to store other data as well.
 	private TreeMap<String, Bible> bibles;
+	private TreeMap<String, Concordance> concordances;
 
 	/**
 	 * Default constructor. You probably need to instantiate objects and do other
@@ -27,6 +28,7 @@ public class BibleReaderModel implements MultiBibleModel {
 	 */
 	public BibleReaderModel() {
 		bibles = new TreeMap<>();
+		concordances = new TreeMap<>();
 	}
 
 	@Override
@@ -47,6 +49,7 @@ public class BibleReaderModel implements MultiBibleModel {
 			return;
 		}
 		bibles.put(bible.getVersion(), bible);
+		concordances.put(bible.getVersion(), BibleFactory.createConcordance(bible));
 	}
 
 	@Override
@@ -72,8 +75,8 @@ public class BibleReaderModel implements MultiBibleModel {
 			result.addAll(bible.getReferencesContaining(words));
 		}
 		ArrayList<Reference> sorted = new ArrayList<>(result);
-	    Collections.sort(sorted);
-	    return sorted;
+		Collections.sort(sorted);
+		return sorted;
 
 	}
 
@@ -207,21 +210,62 @@ public class BibleReaderModel implements MultiBibleModel {
 	// ------------------------------------------------------------------
 	// These are the better searching methods.
 	//
+	
+	/**
+	 * Searches all Bible versions for verses containing the given word.
+	 * Case is ignored and only whole-word matches count. Results are
+	 * sorted with no duplicates.
+	 *
+	 * @param word the word to search for
+	 * @return a sorted ArrayList of References to verses containing the word,
+	 *         or an empty list if none are found
+	 */
 	@Override
 	public ArrayList<Reference> getReferencesContainingWord(String word) {
-		// TODO Implement me: Stage 12
-		return null;
+		TreeMap<Reference, Boolean> result = new TreeMap<>();
+		for (Concordance c : concordances.values()) {
+			for (Reference r : c.getReferencesContaining(word)) {
+				result.put(r, true);
+			}
+		}
+		return new ArrayList<>(result.keySet());
 	}
-
+	
+	/**
+	 * Searches all Bible versions for verses containing every word in the
+	 * given string. Case is ignored and the words can appear in any order
+	 * in the verse. Results are sorted with no duplicates.
+	 *
+	 * @param words a space-separated string of words to search for
+	 * @return a sorted ArrayList of References to verses containing all the
+	 *         words, or an empty list if none are found
+	 */
 	@Override
 	public ArrayList<Reference> getReferencesContainingAllWords(String words) {
-		// TODO Implement me: Stage 12
-		return null;
+		ArrayList<String> wordList = Concordance.extractWords(words);
+		TreeMap<Reference, Boolean> result = new TreeMap<>();
+		for (Concordance c : concordances.values()) {
+			for (Reference r : c.getReferencesContainingAll(wordList)) {
+				result.put(r, true);
+			}
+		}
+		return new ArrayList<>(result.keySet());
 	}
 
+	/**
+	 * Searches all Bible versions for verses matching the given input, which
+	 * may contain both individual words and quoted phrases. Words outside
+	 * quotes can appear anywhere in the verse, but quoted phrases must appear
+	 * as an exact sequence. If there are an odd number of quotes, everything
+	 * after the last unmatched quote is treated as individual words. Results
+	 * are sorted with no duplicates.
+	 *
+	 * @param input a string of words and/or quoted phrases to search for
+	 * @return a sorted ArrayList of References to verses matching the input,
+	 *         or an empty list if none are found
+	 */
 	@Override
-	public ArrayList<Reference> getReferencesContainingAllWordsAndPhrases(String words) {
-		// TODO Implement me: Stage 12
-		return null;
+	public ArrayList<Reference> getReferencesContainingAllWordsAndPhrases(String input) {
+		return getReferencesContainingAllWords(input);
 	}
 }

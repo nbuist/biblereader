@@ -10,7 +10,7 @@ import java.util.TreeMap;
  * A class that stores a version of the Bible.
  * 
  * @author Chuck Cusack (Provided the interface)
- * @author ? (provided the implementation)
+ * @author noahbuist
  */
 public class TreeMapBible implements Bible {
 
@@ -323,7 +323,14 @@ public class TreeMapBible implements Bible {
 		}
 		return result;
 	}
-	//helper method
+	/**
+	 * Helper method returns a reference to the first verse of the book that follows the given book.
+	 * If the given book is the last book in the Bible, returns null.
+	 *
+	 * @param book the book whose successor we want
+	 * @return a Reference pointing to chapter 1, verse 1 of the next book,
+	 *         or null if there is no next book
+	 */
 	private Reference getFirstReferenceOfNextBook(BookOfBible book) {
 	    BookOfBible[] books = BookOfBible.values();
 	    for (int i = 0; i < books.length - 1; i++) {
